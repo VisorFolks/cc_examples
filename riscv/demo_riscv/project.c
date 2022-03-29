@@ -10,6 +10,7 @@
 
 #include <status.h>
 #include <stdio.h>
+#include <string.h>
 #include <terravisor/bootstrap.h>
 #include <arch.h>
 #include <driver.h>
@@ -20,46 +21,49 @@
 #include <hal/gpio.h>
 
 static unsigned long long t;
+static unsigned int ticks = 16384;
 
 static void test()
 {
 	arch_di_mtime();
 	t = clint_read_time();
-	clint_config_tcmp(0, (t + 12500));
+	clint_config_tcmp(0, (t + ticks));
 	arch_ei_mtime();
 }
 
-static gpio_port_t gled, bled, rled;
+static gpio_port_t gled, bled;
 
 void plug()
 {
-	mret_t mres;
 	bootstrap();
 	driver_setup_all();
 	platform_print_cpu_info();
-	arch_machine_call(0, 100, 200, 300, &mres);
-	link_interrupt(local, 7, test);
+	link_interrupt(int_local, 7, test);
 
-	gpio_pin_alloc(&gled, 0, 19);
-	gpio_pin_alloc(&bled, 0, 21);
-	gpio_pin_alloc(&rled, 0, 22);
+	gpio_pin_alloc(&gled, PORTA, 19);
+	gpio_pin_alloc(&bled, PORTA, 21);
 	gpio_pin_mode(&gled, out);
 	gpio_pin_mode(&bled, out);
-	gpio_pin_mode(&rled, out);
 	gpio_pin_set(&gled);
 	gpio_pin_set(&bled);
-	gpio_pin_set(&rled);
 
 	t = clint_read_time();
-	clint_config_tcmp(0, (t + 12500));
+	clint_config_tcmp(0, (t + ticks));
 	arch_ei_mtime();
+	printf("Demo Program!\n");
+	printf("< ! > Running Blinky ... [");
+	return;
 }
+
+char progress[] = "-\\|/";
 
 void play()
 {
-	printf("Time: %lu\n", (unsigned long)t);
+	static unsigned int i = 0;
+	printf("%c]", progress[(i++) % strlen(progress)]);
 	gpio_pin_toggle(&gled);
 	gpio_pin_toggle(&bled);
-	gpio_pin_toggle(&rled);
 	arch_wfi();
+	printf("\b\b");
+	return;
 }
