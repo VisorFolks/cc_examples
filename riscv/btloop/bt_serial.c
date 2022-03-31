@@ -34,44 +34,12 @@ static void bt_serial_irq_handler(void);
 
 static status_t bt_serial_setup(void)
 {
-	mret_t mres;
-	swdev_t *sp;
-	module_t *dp;
-	hw_devid_t devid;
-	arch_machine_call(fetch_sp, bt_uart, 0, 0, &mres);
-	if(mres.status != success)
-	{
-		sysdbg3("Console could not found!\n");
-		return mres.status;
-	}
-	sp = (swdev_t *) mres.p;
-	devid = sp->hwdev_id;
-	bt_port.pmux = sp->pmux;
-
-	for(uint8_t i = 0; i < sp->pmux->npins; i++)
-	{
-		gpio_pin_alloc(&io[i], sp->pmux->port, sp->pmux->pins[i]);
-		gpio_enable_alt_io(&io[i], sp->pmux->function);
-	}
-
-	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
-	if(mres.status != success)
-	{
-		sysdbg3("UART Device %d not found!\n", devid);
-		return mres.status;
-	}
-	dp = (module_t *)mres.p;
-	bt_port.port_id = dp->id;
-	bt_port.clk_id = dp->clk_id;
-	bt_port.baddr = dp->baddr;
-	bt_port.stride = dp->stride;
-	bt_port.baud = dp->clk;
-	bt_port.irq = &dp->interrupt[0];
+	uart_get_properties(&bt_port, bt_uart);
 	bt_port.irq_handler = bt_serial_irq_handler;
 
 	sysdbg2("UART engine @ %p\n", bt_port.baddr);
 	sysdbg2("UART baud @ %lubps\n", bt_port.baud);
-	sysdbg2("UART irqs - %u\n", dp->interrupt[0].id);
+	sysdbg2("UART irqs - %u\n", bt_port.irq);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
