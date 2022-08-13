@@ -7,3 +7,6 @@
 [submodule "avr/demo_avr_timer"]
 	path = avr/demo_avr_timer
 	url = git@github.com:akashkollipara/demo_avr_timer.git
+[submodule "coremark/cm.src/upstream"]
+	path = coremark/cm.src/upstream
+	url = https://github.com/eembc/coremark.git
