@@ -1,12 +1,9 @@
-[submodule "avr/cc-sort-with-rev"]
-	path = avr/cc-sort-with-rev
-	url = git@github.com:akashkollipara/cc-sort-with-rev.git
-[submodule "avr/cc-swap-no-temp"]
-	path = avr/cc-swap-no-temp
-	url = git@github.com:akashkollipara/cc-swap-no-temp.git
-[submodule "avr/demo_avr_timer"]
-	path = avr/demo_avr_timer
-	url = git@github.com:akashkollipara/demo_avr_timer.git
 [submodule "coremark/cm.src/upstream"]
 	path = coremark/cm.src/upstream
 	url = https://github.com/eembc/coremark.git
+[submodule "cc-sort-with-rev"]
+	path = cc-sort-with-rev
+	url = https://github.com/akashkollipara/cc-sort-with-rev.git
+[submodule "cc-swap-no-temp"]
+	path = cc-swap-no-temp
+	url = https://github.com/akashkollipara/cc-swap-no-temp.git

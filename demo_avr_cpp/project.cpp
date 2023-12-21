@@ -18,6 +18,7 @@ extern "C"
 	#include <driver.h>
 	#include <driver/watchdog.h>
 	#include <hal/gpio.h>
+#include <time.h>
 }
 
 #include "gpio.h"
@@ -41,25 +42,23 @@ EXPORT_C(void plug())
 
 char progress[] = "-\\|/";
 
-void delay(unsigned long d)
-{
-	unsigned long c;
-	for(c = 0; c < d; c++)
-		asm volatile("nop");
-}
-
 EXPORT_C(void play())
 {
-	static int i = 0;
+	static unsigned char i = 0;
+	char progress[] = "-\\|/";
+	uint64_t time;
+	char c = progress[(i++) % strlen(progress)];
+
+	get_timestamp(&time);
+	time /= 1000U;
+	printf("[%012llu] Running Blinky ... [%c]", time, c);
 
 	wdog_guard(3, true, NULL);
-
 	/* call the toggle member of led object */
 	led.toggle();
-	printf("%c]", progress[i++]);
-	i = i > 3 ? 0 : i;
 	wdog_hush();
-	delay(500000);
+
+	mdelay(500);
 	printf("\b\b");
 	return;
 }
