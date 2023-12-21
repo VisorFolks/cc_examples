@@ -1,0 +1,6 @@
+*.elf
+*.swp
+*.o
+*.tmp
+a.out
+out/
