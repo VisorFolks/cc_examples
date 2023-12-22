@@ -218,8 +218,4 @@ void portable_fini(core_portable *p);
 #endif
 #endif
 
-#if MAIN_HAS_NOARGC
-extern void main(void);
-#endif
-
 #endif /* CORE_PORTME_H */

@@ -17,7 +17,8 @@
 #include <driver/onboardled.h>
 #include <time.h>
 #include <stdlib.h>
-#include "core_portme.h"
+
+extern void main(void);	/* coremark main */
 
 void plug()
 {
